@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AssetManager.Models;
+using AssetManager.Dtos.BankAccounts;
 
 namespace AssetManager.Controllers
 {
@@ -14,62 +15,60 @@ namespace AssetManager.Controllers
                 Id = 1,
                 Name = "台新",
                 Balance = 75000m,
+                Currency = "TWD",
+                IsActive = true,
             },
             new BankAccount
             {
                 Id = 2,
                 Name = "中信",
                 Balance = 1000m,
+                Currency = "TWD",
+                IsActive = true,
             },
         };
 
         [HttpGet]
-        public ActionResult<IEnumerable<BankAccount>> GetAll()
+        public ActionResult<IEnumerable<BankAccountResponseDto>> GetAll()
         {
-            return Ok(_bankAccounts);
+            var result = _bankAccounts.Where(x => x.IsActive).Select(ToResDto).ToList();
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<BankAccount> GetById(int id)
+        public ActionResult<BankAccountResponseDto> GetById(int id)
         {
-            var result = _bankAccounts.FirstOrDefault(x => x.Id == id);
+            var result = _bankAccounts.FirstOrDefault(x => x.Id == id && x.IsActive);
             if (result == null)
             {
                 return NotFound();
             }
-            return Ok(result);
+            return Ok(ToResDto(result));
         }
 
         [HttpPost]
-        public ActionResult<BankAccount> Create(BankAccount bankAccount)
+        public ActionResult<BankAccountResponseDto> Create(BankAccountCreateDto dto)
         {
-            // 驗證
-            if (string.IsNullOrWhiteSpace(bankAccount.Name))
+            var bankAccount = new BankAccount()
             {
-                return BadRequest("Name can't be empty");
-            }
+                Name = dto.Name,
+                Balance = dto.Balance,
+                Currency = dto.Currency,
+                IsActive = true,
+            };
 
-            // 產生 Id
             var newId = _bankAccounts.Any() ? _bankAccounts.Max(x => x.Id) + 1 : 1;
-
-            // 指定 Id
             bankAccount.Id = newId;
 
-            // 加入清單
             _bankAccounts.Add(bankAccount);
 
-            // 回傳 201
-            return CreatedAtAction(nameof(GetById), new { id = bankAccount.Id }, bankAccount);
+            return CreatedAtAction(nameof(GetById), new { id = bankAccount.Id }, ToResDto(bankAccount));
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, BankAccount updatedBankAccount)
+        public IActionResult Update(int id, BankAccountUpdateDto updatedBankAccount)
         {
-            if (string.IsNullOrWhiteSpace(updatedBankAccount.Name))
-            {
-                return BadRequest("Name can't be empty");
-            }
-
             var bankAccount = _bankAccounts.FirstOrDefault(x => x.Id == id);
 
             if (bankAccount == null)
@@ -94,10 +93,21 @@ namespace AssetManager.Controllers
             {
                 return NotFound();
             }
-            // 3. 從 _bankAccounts 移除
-            _bankAccounts.Remove(bankAccount);
-            // 4. 回傳 NoContent()
+            // 3. 從 _bankAccounts 軟刪除
+            bankAccount.IsActive = false;
             return NoContent();
+        }
+
+        private static BankAccountResponseDto ToResDto(BankAccount bankAccount)
+        {
+            return new BankAccountResponseDto
+            {
+                Id = bankAccount.Id,
+                Name = bankAccount.Name,
+                Balance = bankAccount.Balance,
+                Currency = bankAccount.Currency,
+                IsActive = bankAccount.IsActive
+            };
         }
     }
 }
