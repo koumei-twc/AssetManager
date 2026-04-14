@@ -38,6 +38,15 @@ AssetManager 的目標是幫助使用者：
 * 加入基本資料驗證（Name 不可為空）
 * 使用 List<T> 模擬資料庫（重新啟動後資料會重置）
 
+### v0.3.0
+- 建立 DTO 架構（Create / Update / Response）
+- 使用 Data Annotations 加入欄位驗證
+- API 改為使用 DTO，不再直接暴露 Model
+- 實作 Model → Response DTO 的轉換
+- 抽出共用轉換方法（ToResDto）
+- 將刪除改為軟刪除（使用 IsActive）
+- GetAll 僅回傳啟用中的帳戶
+
 ---
 
 ## 🧩 預計功能
