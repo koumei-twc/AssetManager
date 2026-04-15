@@ -9,7 +9,11 @@ namespace AssetManager.Controllers
     [Route("api/[controller]")]
     public class BankAccountsController : ControllerBase
     {
-        private readonly BankAccountService _service = new();
+        private readonly BankAccountService _service;
+        public BankAccountsController(BankAccountService service)
+        {
+            _service = service;
+        }
 
         [HttpGet]
         public ActionResult<IEnumerable<BankAccountResponseDto>> GetAll()
