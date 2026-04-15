@@ -7,7 +7,7 @@ namespace AssetManager
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddSingleton<BankAccountService>();
+            builder.Services.AddSingleton<IBankAccountService, BankAccountService>();
 
             // Add services to the container.
             builder.Services.AddControllers();
