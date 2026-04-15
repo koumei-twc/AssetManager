@@ -9,8 +9,8 @@ namespace AssetManager.Controllers
     [Route("api/[controller]")]
     public class BankAccountsController : ControllerBase
     {
-        private readonly BankAccountService _service;
-        public BankAccountsController(BankAccountService service)
+        private readonly IBankAccountService _service;
+        public BankAccountsController(IBankAccountService service)
         {
             _service = service;
         }

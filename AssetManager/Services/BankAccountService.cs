@@ -1,52 +1,40 @@
-﻿using AssetManager.Models;
+﻿using AssetManager.Data;
+using AssetManager.Models;
 
 namespace AssetManager.Services
 {
     public class BankAccountService : IBankAccountService
     {
-        private static readonly List<BankAccount> _bankAccounts = new()
+        private readonly AppDbContext _context;
+        public BankAccountService(AppDbContext context)
         {
-            new BankAccount
-            {
-                Id = 1,
-                Name = "台新",
-                Balance = 75000m,
-                Currency = "TWD",
-                IsActive = true,
-            },
-            new BankAccount
-            {
-                Id = 2,
-                Name = "中信",
-                Balance = 1000m,
-                Currency = "TWD",
-                IsActive = true,
-            },
-        };
+            _context = context;
+        }
 
         public List<BankAccount> GetAll()
         {
-            return _bankAccounts.Where(x => x.IsActive).ToList();
+            return _context.BankAccounts
+                .Where(x => x.IsActive)
+                .ToList();
         }
 
         public BankAccount? GetById(int id)
         {
-            return _bankAccounts.FirstOrDefault(x => x.Id == id && x.IsActive);
+            return _context.BankAccounts
+                .FirstOrDefault(x => x.Id == id && x.IsActive);
         }
 
         public BankAccount Create(BankAccount bankAccount)
         {
-            var newId = _bankAccounts.Any() ? _bankAccounts.Max(x => x.Id) + 1 : 1;
-            bankAccount.Id = newId;
-
-            _bankAccounts.Add(bankAccount);
+            _context.BankAccounts.Add(bankAccount);
+            _context.SaveChanges();
 
             return bankAccount;
         }
 
         public bool Update(int id, BankAccount updated)
         {
-            var bankAccount = _bankAccounts.FirstOrDefault(x => x.Id == id);
+            var bankAccount = _context.BankAccounts.FirstOrDefault(x => x.Id == id);
 
             if (bankAccount == null)
                 return false;
@@ -56,17 +44,22 @@ namespace AssetManager.Services
             bankAccount.Currency = updated.Currency;
             bankAccount.IsActive = updated.IsActive;
 
+            _context.SaveChanges();
+
             return true;
         }
 
         public bool Delete(int id)
         {
-            var bankAccount = _bankAccounts.FirstOrDefault(x => x.Id == id);
+            var bankAccount = _context.BankAccounts.FirstOrDefault(x => x.Id == id);
 
             if (bankAccount == null)
                 return false;
 
             bankAccount.IsActive = false;
+
+            _context.SaveChanges();
+
             return true;
         }
     }

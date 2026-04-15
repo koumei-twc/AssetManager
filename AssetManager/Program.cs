@@ -1,4 +1,6 @@
 using AssetManager.Services;
+using AssetManager.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace AssetManager
 {
@@ -7,10 +9,12 @@ namespace AssetManager
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddSingleton<IBankAccountService, BankAccountService>();
+            builder.Services.AddScoped<IBankAccountService, BankAccountService>();
 
             // Add services to the container.
             builder.Services.AddControllers();
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlite("Data Source=app.db"));
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
