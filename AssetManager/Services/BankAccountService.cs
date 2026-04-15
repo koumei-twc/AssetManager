@@ -2,7 +2,7 @@
 
 namespace AssetManager.Services
 {
-    public class BankAccountService
+    public class BankAccountService : IBankAccountService
     {
         private static readonly List<BankAccount> _bankAccounts = new()
         {
