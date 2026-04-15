@@ -68,6 +68,17 @@ AssetManager 的目標是幫助使用者：
 - 提升系統彈性，可在不修改 Controller 的情況下替換 Service 實作
 - 為未來接資料庫與單元測試做好準備
 
+### v0.7.0
+- 導入 Entity Framework Core 並使用 SQLite 作為資料庫
+- 建立 AppDbContext 管理資料庫連線與資料表
+- 使用 DbSet 定義 BankAccounts 資料表
+- 將原本 in-memory List 改為資料庫存取
+- 完成 CRUD 操作（Create / Read / Update / Soft Delete）
+- 使用 Migration 建立資料表結構
+- 資料可持久化，重啟應用後仍可保留
+- 修正 DI 生命週期（改為 Scoped 以支援 DbContext）
+- Controller 完全透過 Service + Interface 操作資料
+
 ---
 
 ## 🧩 預計功能
