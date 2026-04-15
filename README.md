@@ -47,6 +47,12 @@ AssetManager 的目標是幫助使用者：
 - 將刪除改為軟刪除（使用 IsActive）
 - GetAll 僅回傳啟用中的帳戶
 
+### v0.4.0
+- 導入 Service Layer，將商業邏輯從 Controller 中分離
+- 建立 BankAccountService 負責資料操作與邏輯處理
+- Controller 僅負責處理 HTTP Request/Response
+- 改善程式結構，提升可維護性
+
 ---
 
 ## 🧩 預計功能
