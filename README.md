@@ -53,6 +53,13 @@ AssetManager 的目標是幫助使用者：
 - Controller 僅負責處理 HTTP Request/Response
 - 改善程式結構，提升可維護性
 
+### v0.5.0
+- 導入 Dependency Injection（DI）
+- 使用建構子注入 Service
+- 在 Program.cs 註冊 BankAccountService
+- 移除 Controller 中的手動 new Service
+- 改善耦合度與可測試性
+
 ---
 
 ## 🧩 預計功能
