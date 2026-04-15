@@ -60,6 +60,14 @@ AssetManager 的目標是幫助使用者：
 - 移除 Controller 中的手動 new Service
 - 改善耦合度與可測試性
 
+### v0.6.0
+- 導入 Interface（IBankAccountService）作為服務層抽象
+- BankAccountService 實作 IBankAccountService
+- Controller 改為依賴 Interface（而非具體類別）
+- 更新 Dependency Injection 註冊，使用 Interface 對應實作
+- 提升系統彈性，可在不修改 Controller 的情況下替換 Service 實作
+- 為未來接資料庫與單元測試做好準備
+
 ---
 
 ## 🧩 預計功能
