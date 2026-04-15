@@ -1,37 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AssetManager.Dtos.BankAccounts;
 using AssetManager.Models;
-using AssetManager.Dtos.BankAccounts;
+using AssetManager.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AssetManager.Controllers
-{
+{ 
     [ApiController]
     [Route("api/[controller]")]
     public class BankAccountsController : ControllerBase
     {
-        private static readonly List<BankAccount> _bankAccounts = new()
-        {
-            new BankAccount
-            {
-                Id = 1,
-                Name = "台新",
-                Balance = 75000m,
-                Currency = "TWD",
-                IsActive = true,
-            },
-            new BankAccount
-            {
-                Id = 2,
-                Name = "中信",
-                Balance = 1000m,
-                Currency = "TWD",
-                IsActive = true,
-            },
-        };
+        private readonly BankAccountService _service = new();
 
         [HttpGet]
         public ActionResult<IEnumerable<BankAccountResponseDto>> GetAll()
         {
-            var result = _bankAccounts.Where(x => x.IsActive).Select(ToResDto).ToList();
+            var accounts = _service.GetAll();
+
+            var result = accounts.Select(ToResDto).ToList();
 
             return Ok(result);
         }
@@ -39,12 +24,12 @@ namespace AssetManager.Controllers
         [HttpGet("{id}")]
         public ActionResult<BankAccountResponseDto> GetById(int id)
         {
-            var result = _bankAccounts.FirstOrDefault(x => x.Id == id && x.IsActive);
-            if (result == null)
+            var account = _service.GetById(id);            
+            if (account == null)
             {
                 return NotFound();
             }
-            return Ok(ToResDto(result));
+            return Ok(ToResDto(account));
         }
 
         [HttpPost]
@@ -58,43 +43,37 @@ namespace AssetManager.Controllers
                 IsActive = true,
             };
 
-            var newId = _bankAccounts.Any() ? _bankAccounts.Max(x => x.Id) + 1 : 1;
-            bankAccount.Id = newId;
+            var created = _service.Create(bankAccount);            
 
-            _bankAccounts.Add(bankAccount);
-
-            return CreatedAtAction(nameof(GetById), new { id = bankAccount.Id }, ToResDto(bankAccount));
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, ToResDto(created));
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, BankAccountUpdateDto updatedBankAccount)
+        public IActionResult Update(int id, BankAccountUpdateDto dto)
         {
-            var bankAccount = _bankAccounts.FirstOrDefault(x => x.Id == id);
-
-            if (bankAccount == null)
+            var updated = new BankAccount
             {
+                Name = dto.Name,
+                Balance = dto.Balance,
+                Currency = dto.Currency,
+                IsActive = dto.IsActive
+            };
+
+            var success = _service.Update(id, updated);
+
+            if (!success)       
                 return NotFound();
-            }
-
-            bankAccount.Name = updatedBankAccount.Name;
-            bankAccount.Balance = updatedBankAccount.Balance;
-            bankAccount.Currency = updatedBankAccount.Currency;
-            bankAccount.IsActive = updatedBankAccount.IsActive;
-
+                            
             return NoContent();
         }
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            // 1. 找資料
-            var bankAccount = _bankAccounts.FirstOrDefault(x => x.Id == id);
-            // 2. 找不到 -> NotFound()
-            if (bankAccount == null)
-            {
+            var success = _service.Delete(id);
+
+            if (!success)
                 return NotFound();
-            }
-            // 3. 從 _bankAccounts 軟刪除
-            bankAccount.IsActive = false;
+
             return NoContent();
         }
 
