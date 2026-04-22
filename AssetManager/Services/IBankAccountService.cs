@@ -1,13 +1,14 @@
-﻿using AssetManager.Models;
+﻿using AssetManager.Dtos.BankAccounts;
+using AssetManager.Models;
 
 namespace AssetManager.Services
 {
     public interface IBankAccountService
     {
-        List<BankAccount> GetAll();
-        BankAccount? GetById(int id);
-        BankAccount Create(BankAccount bankAccount);
-        bool Update(int id, BankAccount updated);
+        List<BankAccountResponseDto> GetAll();
+        BankAccountResponseDto? GetById(int id);
+        BankAccountResponseDto Create(BankAccountCreateDto dto);
+        bool Update(int id, BankAccountUpdateDto dto);
         bool Delete(int id);
     }
 }
