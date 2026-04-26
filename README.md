@@ -106,6 +106,23 @@ AssetManager 的目標是幫助使用者：
 
 ---
 
+### v0.8.0
+
+* 新增 Fund（資金用途）系統（核心功能）
+* 支援 Fund CRUD（Create / Read / Update / Soft Delete）
+* 實作資金分配邏輯（CurrentAmount）
+* 新增 AddAmount / RemoveAmount API（資金流動）
+* 防止非法操作（負數金額、超扣）
+* 計算 RemainingAmount（目標差額）
+* Controller 支援資金操作路由：
+
+  * POST /api/Funds/{id}/add
+  * POST /api/Funds/{id}/remove
+* 完成基本資金用途管理能力
+
+
+---
+
 #### 🎯 改動目的
 
 * 降低 Controller 複雜度（避免變胖）
