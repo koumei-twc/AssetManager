@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssetManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260415131939_InitialCreate")]
+    [Migration("20260426132941_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -42,6 +42,30 @@ namespace AssetManager.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BankAccounts");
+                });
+
+            modelBuilder.Entity("AssetManager.Models.Fund", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("CurrentAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("TargetAmount")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Funds");
                 });
 #pragma warning restore 612, 618
         }

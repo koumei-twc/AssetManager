@@ -10,6 +10,7 @@ namespace AssetManager
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddScoped<IBankAccountService, BankAccountService>();
+            builder.Services.AddScoped<IFundService, FundService>();
 
             // Add services to the container.
             builder.Services.AddControllers();

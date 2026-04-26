@@ -25,6 +25,22 @@ namespace AssetManager.Migrations
                 {
                     table.PrimaryKey("PK_BankAccounts", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Funds",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    TargetAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    CurrentAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Funds", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -32,6 +48,9 @@ namespace AssetManager.Migrations
         {
             migrationBuilder.DropTable(
                 name: "BankAccounts");
+
+            migrationBuilder.DropTable(
+                name: "Funds");
         }
     }
 }
