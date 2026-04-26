@@ -10,5 +10,6 @@ namespace AssetManager.Data
         }
 
         public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<Fund> Funds { get; set; }
     }
 }
